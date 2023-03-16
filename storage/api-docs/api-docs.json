@@ -1,0 +1,1073 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Equipment Api",
+        "description": "Equipment APi для Web-версии",
+        "contact": {
+            "name": "ASt",
+            "email": "alexandr.statut@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://equipment/api/v1/",
+            "description": "Main API server"
+        }
+    ],
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "JWT Авторизвция"
+                ],
+                "summary": "Авторизация",
+                "description": "Авторизация клиента",
+                "operationId": "auth.login",
+                "requestBody": {
+                    "description": "Auth data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "description": "User email",
+                                        "type": "string",
+                                        "example": "test@mail.ru"
+                                    },
+                                    "password": {
+                                        "description": "User password",
+                                        "type": "string",
+                                        "example": "qwerty12"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "JWT token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/token_response"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. When required parameters were not supplied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "JWT Авторизвция"
+                ],
+                "summary": "Логаут",
+                "description": "Сбросить авторизацию",
+                "operationId": "auth.logout",
+                "responses": {
+                    "200": {
+                        "description": "Action data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. When required parameters were not supplied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "UserToken": []
+                    }
+                ]
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "tags": [
+                    "JWT Авторизвция"
+                ],
+                "summary": "Обновление токена",
+                "description": "Пролонгирование истекшего токена",
+                "operationId": "auth.refresh",
+                "responses": {
+                    "201": {
+                        "description": "JWT token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/token_response"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. When required parameters were not supplied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "UserToken": []
+                    }
+                ]
+            }
+        },
+        "/auth/me": {
+            "post": {
+                "tags": [
+                    "JWT Авторизвция"
+                ],
+                "summary": "Информация обо мне",
+                "description": "Информация об авторизованном пользователе",
+                "operationId": "auth.me",
+                "responses": {
+                    "200": {
+                        "description": "User data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/user_response"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. When required parameters were not supplied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "UserToken": []
+                    }
+                ]
+            }
+        },
+        "/equipment": {
+            "get": {
+                "tags": [
+                    "Оборудование"
+                ],
+                "summary": "Список ",
+                "description": "Список блоков филиала",
+                "operationId": "equipment.index",
+                "parameters": [
+                    {
+                        "name": "type_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список оборудования",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/equipment_response"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Equipments not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. When required parameters were not supplied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "UserToken": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Оборудование"
+                ],
+                "summary": "Добавить оборудование",
+                "description": "Добавить оборудование",
+                "operationId": "equipment.store",
+                "requestBody": {
+                    "description": "Данные оборудования",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "items": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/equipment_request"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Record ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "integer",
+                                            "example": "4554"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. When required parameters were not supplied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "UserToken": []
+                    }
+                ]
+            }
+        },
+        "/equipment/{id}": {
+            "get": {
+                "tags": [
+                    "Оборудование"
+                ],
+                "summary": "Информация об оборудовании",
+                "description": "Инфмармция об оборудовании",
+                "operationId": "equipment.show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Type ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Информация о типе оборудования",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/equipment_response"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Equipment not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. When required parameters were not supplied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "UserToken": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Оборудование"
+                ],
+                "summary": "Обновить оборудование",
+                "description": "Обновить оборудование",
+                "operationId": "equipment.update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Type id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "New block data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "serial_number": {
+                                        "description": "Serial number",
+                                        "type": "string",
+                                        "example": "12345ab",
+                                        "nullable": "true"
+                                    },
+                                    "description": {
+                                        "description": "Comment",
+                                        "type": "string",
+                                        "example": "Some text",
+                                        "nullable": "true"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Update result",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Equipment not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. When required parameters were not supplied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "UserToken": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Оборудование"
+                ],
+                "summary": "Удалить оборудование",
+                "description": "Удалить оборудование",
+                "operationId": "equipment.destroy",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Type id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Destroy result",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Equipment not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "There are some active events in this stream OR Error: Bad request. When required parameters were not supplied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "UserToken": []
+                    }
+                ]
+            }
+        },
+        "/etype": {
+            "get": {
+                "tags": [
+                    "Тип оборудования"
+                ],
+                "summary": "Список ",
+                "description": "Список блоков филиала",
+                "operationId": "etype.index",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Список типов оборудования",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/equipment_type_response"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Types not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. When required parameters were not supplied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "UserToken": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Тип оборудования"
+                ],
+                "summary": "Добавить тип оборудования",
+                "description": "Добавить тип оборудования",
+                "operationId": "etype.store",
+                "requestBody": {
+                    "description": "Данные типа оборудования",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Type title",
+                                        "type": "string",
+                                        "example": "Some title"
+                                    },
+                                    "mask": {
+                                        "description": "Mask",
+                                        "type": "string",
+                                        "example": "xxxxx"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Record ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "integer",
+                                            "example": "4554"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. When required parameters were not supplied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "UserToken": []
+                    }
+                ]
+            }
+        },
+        "/etype/{id}": {
+            "get": {
+                "tags": [
+                    "Тип оборудования"
+                ],
+                "summary": "Информация о типе оборудования",
+                "description": "Инфмармция о типе оборудования",
+                "operationId": "etype.show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Type ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Информация о типе оборудования",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/equipment_type_response"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Type not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. When required parameters were not supplied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "UserToken": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Тип оборудования"
+                ],
+                "summary": "Обновить тип оборудования",
+                "description": "Обновить тип оборудования",
+                "operationId": "etype.update",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Type id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "New block data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "description": "Type title",
+                                        "type": "string",
+                                        "example": "Some title",
+                                        "nullable": "true"
+                                    },
+                                    "mask": {
+                                        "description": "Mask",
+                                        "type": "string",
+                                        "example": "xxxxx",
+                                        "nullable": "true"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Update result",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Type not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. When required parameters were not supplied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "UserToken": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Тип оборудования"
+                ],
+                "summary": "Удалить тип оборудования",
+                "description": "Удалить тип оборудования",
+                "operationId": "etype.destroy",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Type id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Destroy result",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Type not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "There are some active events in this stream OR Error: Bad request. When required parameters were not supplied.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/error_response"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "UserToken": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "equipment_request": {
+                "title": "Оборудование",
+                "properties": {
+                    "type_id": {
+                        "description": "Type ID",
+                        "type": "integer",
+                        "example": "12"
+                    },
+                    "serial_number": {
+                        "description": "Serial number",
+                        "type": "string",
+                        "example": "12345ab"
+                    },
+                    "description": {
+                        "description": "Comment",
+                        "type": "string",
+                        "example": "Some text"
+                    }
+                },
+                "type": "object"
+            },
+            "equipment_response": {
+                "title": "Оборудование",
+                "properties": {
+                    "eq_id": {
+                        "type": "integer",
+                        "example": "1234"
+                    },
+                    "type_id": {
+                        "$ref": "#/components/schemas/equipment_type_response"
+                    },
+                    "serial_number": {
+                        "type": "string",
+                        "example": "Some serial number"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Some text"
+                    },
+                    "created_at": {
+                        "type": "integer",
+                        "example": "1234567890"
+                    },
+                    "updated_at": {
+                        "type": "integer",
+                        "example": "1234567890"
+                    }
+                },
+                "type": "object"
+            },
+            "equipment_type_response": {
+                "title": "Тип оборудования",
+                "properties": {
+                    "type_id": {
+                        "type": "integer",
+                        "example": "1234"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Some name"
+                    },
+                    "mask": {
+                        "type": "string",
+                        "example": "Some mask"
+                    },
+                    "created_at": {
+                        "type": "integer",
+                        "example": "1234567890"
+                    },
+                    "updated_at": {
+                        "type": "integer",
+                        "example": "1234567890"
+                    }
+                },
+                "type": "object"
+            },
+            "error_response": {
+                "title": "Ошибка",
+                "properties": {
+                    "error": {
+                        "properties": {
+                            "app": {
+                                "type": "string",
+                                "example": "Risk Api"
+                            },
+                            "code": {
+                                "type": "integer",
+                                "example": "900"
+                            },
+                            "msg": {
+                                "type": "string",
+                                "example": "Bad request"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "token_response": {
+                "title": "JWT токен авторизации",
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "example": "eyJ0eXAiOiJKV1QiL"
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "example": "bearer"
+                    },
+                    "expires_in": {
+                        "type": "integer",
+                        "example": "3600"
+                    }
+                },
+                "type": "object"
+            },
+            "user_response": {
+                "title": "Сотрудники",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": "1234"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Some name"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "test@mail.ru"
+                    },
+                    "email_verified_at": {
+                        "type": "integer",
+                        "example": "1234567890",
+                        "nullable": "true"
+                    },
+                    "created_at": {
+                        "type": "integer",
+                        "example": "1234567890"
+                    },
+                    "updated_at": {
+                        "type": "integer",
+                        "example": "1234567890"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "UserToken": {
+                "type": "http",
+                "description": "You can get token after auth in API by your Login / Password",
+                "name": "Api Client",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "JWT Авторизвция",
+            "description": "Авторизация в API"
+        },
+        {
+            "name": "Оборудование",
+            "description": "Блок оборудования"
+        },
+        {
+            "name": "Тип оборудования",
+            "description": "Блок типов оборудования"
+        }
+    ],
+    "externalDocs": {
+        "description": "Docs",
+        "url": "https://equipment/api/v1/"
+    }
+}
