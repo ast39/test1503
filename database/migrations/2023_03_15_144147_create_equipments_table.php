@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('equipments', function (Blueprint $table) {
             $table->id('eq_id');
-            $table->unsignedInteger('type_id');
+            $table->unsignedBigInteger('type_id')
+                ->nullable(false);
             $table->string('serial_number')->unique('sn');
             $table->text('description')
                 ->nullable();

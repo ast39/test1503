@@ -24,6 +24,13 @@ return new class extends Migration
 
             $table->comment('Типы оборудования');
         });
+
+        Schema::table('equipments', function(Blueprint $table) {
+            $table->foreign('type_id', 'eq_type')
+                ->references('type_id')
+                ->on('equipment_types')
+                ->onDelete('cascade');
+        });
     }
 
     /**
