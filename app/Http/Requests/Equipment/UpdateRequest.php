@@ -25,7 +25,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'type_id'       => 'integer',
-            'serial_number' => 'string|regex:/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/|unique:equipments,serial_number,' . $this->equipment . ',eq_id',
+            'serial_number' => 'string|regex:/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{10}/|unique:equipments,serial_number,' . $this->equipment . ',eq_id',
             'description'   => 'string',
         ];
     }

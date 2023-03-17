@@ -26,7 +26,7 @@ class StoreRequest extends FormRequest
         return [
             'items'                 => 'required|array',
             'items.*.type_id'       => 'required|integer',
-            'items.*.serial_number' => 'required|string|regex:/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,}/|unique:equipments',
+            'items.*.serial_number' => 'required|string|regex:/(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{10}/|unique:equipments',
             'items.*.description'   => 'string',
         ];
     }
