@@ -69,7 +69,7 @@ class EquipmentTypeController extends Controller
         if (is_null($type)) {
             return (new ErrorResource(new AppError(901)))
                 ->response()
-                ->setStatusCode(200);
+                ->setStatusCode(404);
         }
 
         return (new EquipmentTypeResource($type))
@@ -92,7 +92,7 @@ class EquipmentTypeController extends Controller
         if (is_null($type)) {
             return (new ErrorResource(new AppError(901)))
                 ->response()
-                ->setStatusCode(200);
+                ->setStatusCode(404);
         }
 
         return (new BoolAnswerResource([
@@ -114,7 +114,7 @@ class EquipmentTypeController extends Controller
         if (is_null($type)) {
             return (new ErrorResource(new AppError(901)))
                 ->response()
-                ->setStatusCode(200);
+                ->setStatusCode(404);
         }
 
         return (new BoolAnswerResource([
