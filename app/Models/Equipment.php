@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
@@ -27,9 +27,9 @@ class Equipment extends Model {
 
 
     # Тип оборудования
-    public function equipment_type(): HasOne
+    public function equipment_type(): BelongsTo
     {
-        return $this->hasOne(EquipmentType::class, 'type_id', 'type_id');
+        return $this->belongsTo(EquipmentType::class, 'type_id', 'type_id');
     }
 
 
